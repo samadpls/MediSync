@@ -43,7 +43,7 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+                            <i class="ni ni-calendar-grid-58 text-primary text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Doctor Appointment
                             Page</span>
@@ -62,15 +62,23 @@
                     <a class="nav-link " href="{% url 'doctorentry' %}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-user-md text-dark text-sm opacity-10"></i>
+                            <i class="fas fa-user-md text-success text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Doctor Profile</span>
                     </a>
                 </li>
-                <li class="nav-item mt-3">
-                    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account
-                        pages</h6>
-                </li>
+                       <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Patient Record</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'patientrecord' %}">
+              <div
+                  class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-user text-danger text-sm opacity-10"></i>
+              </div>
+              <span class="nav-link-text ms-1">Patient Record</span>
+          </a>
+        </li>
             </ul>
         </div>
     </aside>
@@ -157,10 +165,15 @@
                                             <input class="form-control" type="text" value="03542488855">
                                         </div>
                                     </div>
-                                    <div class="col-6 text-end">
-                                        <a class="btn bg-gradient-dark mb-0" href="javascript:;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Update Record</a>
-                                      </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                        <a class="btn bg-gradient-dark mb-0" href="javascript:;"><i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Update Record</a>
+                                      </div>
+                                      <div class="col-6 text-center">
+                                        <a class="btn bg-gradient-danger mb-0" href="javascript:;"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Delete Record</a>
+                                      </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -176,18 +189,22 @@
                             </div>
                             <div class="card-body p-3 pb-0">
                                 <ul class="list-group">
+                                    {% for record in patient %}
                                     <li
                                         class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                                         <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">Name</h6>
-                                            <span class="text-xs">email</span>
+                                           
+                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">{{record.name}}</h6>
+                                            <span class="text-xs">{{record.email}}</span>
                                         </div>
                                         <div class="d-flex align-items-center text-sm">
-                                            phonenumber
+                                            {{record.phone_number}}
+                                            <a href="{% url 'editpatient' %}">
                                             <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"><i
-                                                    class="fas fa-file-pdf text-lg me-1"></i> Edit</button>
+                                                    class="fas fa-pencil-alt text-lg me-1"></i> Edit</button></a>
                                         </div>
                                     </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>

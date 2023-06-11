@@ -43,7 +43,7 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+                            <i class="ni ni-calendar-grid-58 text-primary text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Doctor Appointment
                             Page</span>
@@ -62,15 +62,23 @@
                     <a class="nav-link" href="{% url 'doctorentry' %}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-user-md text-dark text-sm opacity-10"></i>
+                            <i class="fas fa-user-md text-success text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Doctor Profile</span>
                     </a>
                 </li>
-                <li class="nav-item mt-3">
-                    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account
-                        pages</h6>
-                </li>
+                       <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Patient Record</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'patientrecord' %}">
+              <div
+                  class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-user text-danger text-sm opacity-10"></i>
+              </div>
+              <span class="nav-link-text ms-1">Patient Record</span>
+          </a>
+        </li>
             </ul>
         </div>
     </aside>
@@ -102,6 +110,8 @@
                                     <p class="mb-0">Add new Patient Profile</p>
                                 </div>
                             </div>
+                            <form method="POST" action="{% url 'save_patient' %}">
+                                {% csrf_token %}
                             <div class="card-body">
                                 <p class="text-uppercase text-sm">Patient
                                     Information</p>
@@ -111,7 +121,7 @@
                                             <label for="example-text-input" class="form-control-label">Full
                                                 Name</label>
                                             <input class="form-control" type="text" placeholder="Abdul Samad Siddiqui"
-                                                id="name">
+                                                id="name" name="name" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -119,13 +129,13 @@
                                             <label for="example-text-input" class="form-control-label">Email
                                                 address</label>
                                             <input class="form-control" type="email" placeholder="jesse@example.com"
-                                                id="email">
+                                                id="email" name="email" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Gender</label>
-                                            <select class="form-control">
+                                            <select class="form-control" name="gender" id="gender" required>
                                                 <option selected>Male</option>
                                                 <option>Female</option>
                                             </select>
@@ -135,7 +145,7 @@
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Date
                                                 of Birth</label>
-                                            <input class="form-control" type="date" id="dob">
+                                            <input class="form-control" type="date" id="dob" name="dob" required>
                                         </div>
                                     </div>
                                 </div>
@@ -147,21 +157,24 @@
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Address</label>
                                             <input class="form-control" type="text"
-                                                placeholder="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
+                                                placeholder="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" name="address" id="address" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Phone
                                                 number</label>
-                                            <input class="form-control" type="text" placeholder="03542488855">
+                                            <input class="form-control" type="text" placeholder="03542488855" id="phone" name="phone" required>
                                         </div>
                                     </div>
-                                    <div class="col-6 text-end">
-                                        <a class="btn bg-gradient-dark mb-0" href="javascript:;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Save Record</a>
+                                    <div class="form-group">
+                                    <div class="col-6 text-center">
+                                        <button type="submit" class="btn bg-gradient-dark mb-0" href="javascript:;"><i class="fas fa-save"></i>&nbsp;&nbsp;Save Record</button>
                                       </div>
+                                    </div>
                                 </div>
                             </div>
+                            </form>
                         </div>
                     </div>
                     
@@ -176,19 +189,22 @@
                             </div>
                             <div class="card-body p-3 pb-0">
                                 <ul class="list-group">
+                                    {% for record in patient %}
                                     <li
                                         class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                                         <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">Name</h6>
-                                            <span class="text-xs">email</span>
+                                           
+                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">{{record.name}}</h6>
+                                            <span class="text-xs">{{record.email}}</span>
                                         </div>
                                         <div class="d-flex align-items-center text-sm">
-                                            phonenumber
+                                            {{record.phone_number}}
                                             <a href="{% url 'editpatient' %}">
                                             <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"><i
-                                                    class="fas fa-file-pdf text-lg me-1"></i> Edit</button></a>
+                                                    class="fas fa-pencil-alt text-lg me-1"></i> Edit</button></a>
                                         </div>
                                     </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>

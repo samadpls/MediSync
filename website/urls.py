@@ -8,6 +8,8 @@ urlpatterns = [
     path('editpatient',editpatient,name='editpatient'),
     path('doctor',doctor,name='doctorentry'),
     path('editdoctor',editdoctor,name='editdoctor'),
+    path('patientrecord',patientrecord,name='patientrecord'),
+    path('save_patient',save_patient,name='save_patient'),
 
 
 ]    

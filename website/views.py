@@ -17,13 +17,34 @@ def dashboard(request):
     return render(request,'dashboard.html')
 
 def patient(request):
-    return render(request,'patient.html')
+    patient=Patient.objects.all()
+    return render(request,'patient.html',{'patient':patient})
 
 def editpatient(request):
-    return render(request,'editpatient.html')
+    patient=Patient.objects.all()
+    return render(request,'editpatient.html',{'patient':patient})
 
 def doctor(request):
     return render(request,'doctor.html')
 
 def editdoctor(request):
     return render(request,'editdoctor.html')
+
+def patientrecord(request):
+    return render(request,'patientrecord.html')
+
+def save_patient(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        
+        # Create a new patient record
+        patient = Patient(id_p="".join(random.choices(string.ascii_letters + string.digits, k=4)),name=name, email=email, gender=gender, dob=dob, address=address, phone_number=phone)
+        patient.save()
+         
+    return render(request, 'patient.html')
+

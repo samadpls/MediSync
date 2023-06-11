@@ -43,7 +43,7 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+                            <i class="ni ni-calendar-grid-58 text-primary text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Doctor Appointment
                             Page</span>
@@ -62,15 +62,23 @@
                     <a class="nav-link active" href="{% url 'doctorentry' %}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-user-md text-dark text-sm opacity-10"></i>
+                            <i class="fas fa-user-md text-success text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Doctor Profile</span>
                     </a>
                 </li>
-                <li class="nav-item mt-3">
-                    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account
-                        pages</h6>
-                </li>
+                       <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Patient Record</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'patientrecord' %}">
+              <div
+                  class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-user text-danger text-sm opacity-10"></i>
+              </div>
+              <span class="nav-link-text ms-1">Patient Record</span>
+          </a>
+        </li>
             </ul>
         </div>
     </aside>
@@ -176,7 +184,7 @@
                                             email
                                             <a href="{% url 'editdoctor' %}">
                                             <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"><i
-                                                    class="fas fa-file-pdf text-lg me-1"></i> Edit</button></a>
+                                                    class="fas fa-pencil-alt text-lg me-1"></i> Edit</button></a>
                                         </div>
                                     </li>
                                 </ul>

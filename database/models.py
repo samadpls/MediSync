@@ -2,9 +2,8 @@ from django.db import models
 import random,string
 # Create your models here.
 class Patient(models.Model):
-    id_p = models.CharField(primary_key=True,default="".join(random.choices(string.ascii_letters + string.digits, k=4)), max_length=4)
+    id_p = models.CharField(primary_key=True,max_length=4)
     name = models.CharField(max_length=50)
-    age = models.IntegerField()
     address = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=15)
     email = models.EmailField()
