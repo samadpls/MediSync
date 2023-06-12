@@ -1,3 +1,4 @@
+# Create your models here.
 from django.db import models
 import random,string
 # Create your models here.
@@ -10,15 +11,16 @@ class Patient(models.Model):
     dob = models.DateField()
     gender = models.CharField(max_length=10)
 
-class Availability(models.Model):
-    day_of_week = models.CharField(max_length=20)
-    time_range = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"{self.day_of_week}: {self.time_range}"
-
 class Doctor(models.Model):
+    id_d = models.CharField(primary_key=True,max_length=4)
     name = models.CharField(max_length=255)
     email= models.EmailField()
     specialty = models.CharField(max_length=100)
-    availabilities = models.ManyToManyField(Availability)
+    day_of_week = models.CharField(max_length=20)
+    time_range = models.CharField(max_length=50)
+
+class Appointment(models.Model):
+    id_a = models.CharField(primary_key=True, max_length=4)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)

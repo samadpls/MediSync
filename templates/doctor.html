@@ -104,6 +104,8 @@
             <div class="container-fluid py-4">
                 <div class="row">
                     <div class="col-md-8">
+                        <form method="POST" action="{% url 'save_doctor' %}">
+                            {% csrf_token %}
                         <div class="card">
                             <div class="card-header pb-0">
                                 <div class="d-flex align-items-center">
@@ -113,53 +115,48 @@
                             <div class="card-body">
                                 <p class="text-uppercase text-sm">Doctor
                                     Information</p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Full
-                                                Name</label>
-                                            <input class="form-control" type="text" placeholder="Abdul Samad Siddiqui"
-                                                id="name">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="example-text-input" class="form-control-label">Full Name</label>
+                                                <input class="form-control" type="text" placeholder="Abdul Samad Siddiqui" id="name" name="full_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="example-text-input" class="form-control-label">Email address</label>
+                                                <input class="form-control" type="email" placeholder="jesse@example.com" id="email" name="email">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="example-text-input" class="form-control-label">Specialty</label>
+                                                <input class="form-control" type="text" placeholder="Dentist" id="specialty" name="specialty">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Email
-                                                address</label>
-                                            <input class="form-control" type="email" placeholder="jesse@example.com"
-                                                id="email">
+                                    <hr class="horizontal dark">
+                                    <p class="text-uppercase text-sm">Availability Information</p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="availability_day" class="form-control-label">Day of Week</label>
+                                                <input class="form-control" type="text" id="avl_day" name="availability_day" required placeholder="Mon-Tue">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="availability_time" class="form-control-label">Time Range</label>
+                                                <input class="form-control" type="text" id="t_range" name="availability_time" required placeholder="7pm-8pm">
+                                            </div>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <button class="btn bg-gradient-dark mb-0"><i class="fas fa-plus"></i>&nbsp;&nbsp;Save Record</button>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Specialty</label>
-                                            <input class="form-control" type="text" placeholder="Dentist"
-                                            id="specialty">
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr class="horizontal dark">
-                                <p class="text-uppercase text-sm">Availability
-                                    Information</p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="availability_day" clas="form-control-label">Day of Week</label>
-                                            <input class="form-control" type="text" id="avl_day" name="availability_day" required placeholder="Mon-Tue">
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="availability_day" clas="form-control-label">Time Range</label>
-                                            <input class="form-control" type="text" id="t_range" name="availability_day" required placeholder="7pm-8pm">
-                                           </div>
-                                    </div>
-                                    <div class="col-6 text-end">
-                                        <a class="btn bg-gradient-dark mb-0" href="javascript:;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Save Record</a>
-                                      </div>
-                                </div>
+                                    
                             </div>
+                        </form>
                         </div>
                     </div>
                     
@@ -174,20 +171,23 @@
                             </div>
                             <div class="card-body p-3 pb-0">
                                 <ul class="list-group">
-                                    <li
-                                        class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    {% for record in doctor %}
+                                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                                         <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">Name</h6>
-                                            <span class="text-xs">specialty</span>
+                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">{{ record.name }}</h6>
+                                            <span class="text-xs">{{ record.specialty }}</span>
                                         </div>
                                         <div class="d-flex align-items-center text-sm">
-                                            email
-                                            <a href="{% url 'editdoctor' %}">
-                                            <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"><i
-                                                    class="fas fa-pencil-alt text-lg me-1"></i> Edit</button></a>
+                                            <a href="{% url 'editdoctor' record.id_d %}">
+                                                <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-4">
+                                                    <i class="fas fa-pencil-alt text-lg me-1"></i> Edit
+                                                </button>
+                                            </a>
                                         </div>
                                     </li>
+                                    {% endfor %}
                                 </ul>
+                            </div>
                             </div>
                         </div>
                     </div>

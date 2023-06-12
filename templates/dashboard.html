@@ -95,15 +95,17 @@
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="form-group">
-              <select class="form-select bg-dark text-white" aria-label="Select Patient">
-                <option class="text-white" selected disabled>Select Patient...&nbsp;&nbsp;</option>
-                <option class="text-white">Id and name</option>
+              <select class="btn bg-gradient-danger mb-0" aria-label="Select Patient" id="patient-select">
+                <option class="btn bg-gradient-danger mb-0" selected disabled>Select Patient...&nbsp;&nbsp;</option>
+                {% for patient in patients %}
+                <option class="btn bg-gradient-danger mb-0" id="{{patient.id_p}}">{{patient.id_p}}-{{patient.name}}</option>
+                {% endfor %}
               </select>
             </div>
             
             
         </div>
-          <ul class="navbar-nav justify-content-end">
+          <!-- <ul class="navbar-nav justify-content-end">
             <li class="nav-item dropdown pe-2 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell cursor-pointer"></i>
@@ -129,7 +131,7 @@
                 </li>
               </ul>
             </li>
-          </ul>
+          </ul> -->
         </div>
         
       </div>
@@ -147,8 +149,9 @@
                 <div class="table-responsive p-0">
                   <table class="table align-items-center mb-0">
                     <thead>
+                     
                       <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Doctor Name</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Specialty</th>
                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Availability</th>
                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Book Appointment</th>
@@ -156,28 +159,29 @@
                       </tr>
                     </thead>
                     <tbody>
+                      {% for record in doctor %}
                       <tr>
                         <td>
                           <div class="d-flex px-2 py-1">
                             <div>
-                              <img src="https://xsgames.co/randomusers/avatar.php?g=male" class="avatar avatar-sm me-3" alt="user1">
+                              <img src="{{ random_pic|random }}" class="avatar avatar-sm me-3" alt="user1">
                             </div>
                             <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">John Michael</h6>
+                              <h6 class="mb-0 text-sm">{{record.name}}</h6>
                             </div>
                           </div>
                         </td>
                         <td>
-                          <p class="text-xs font-weight-bold mb-0">Dentist</p>
+                          <p class="text-xs font-weight-bold mb-0">{{record.specialty}}</p>
                         </td>
                         <td class="align-middle text-center">
-                          <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                          <span class="text-secondary text-xs font-weight-bold">{{record.day_of_week}}/{{record.time_range}}</span>
                         </td>
                         <td class="align-middle text-center text-sm">
-                          <a href="{% url 'home'  %}" onclick="return confirm('Insurance is Allotted')">
-                          <span class="badge badge-sm bg-gradient-success">Get Appointment</span></a>
+                          <button class="badge badge-sm bg-gradient-success" onclick="getAppointment('{{ record.id_d }}')">Get Appointment</button>
                         </td>
                       </tr>
+                      {% endfor %}
 
 
                     </tbody>
@@ -355,6 +359,48 @@
   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
   crossorigin="anonymous"></script>
 </body>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function getAppointment(doctorId) {
+    // Get the selected patient ID from the select element
+    const selectedPatientId = document.querySelector('#patient-select option:checked').id;
+  
+    // Create an object with the selected patient ID and doctor ID
+    const data = {
+      patientId: selectedPatientId,
+      doctorId: doctorId
+    };
+  
+    // Make an AJAX request or perform any necessary actions with the data
+    console.log(data);
+  
+    // Send the data to the Django view using an AJAX request
+    fetch("get_appointment", {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    }).then((response) => {
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Appointment Created Successfully!',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          // Optionally, perform any additional actions or update the UI
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Seems Like you havent selected the patient.',
+        });
+      }
+    });
+  }
+</script>
 </html>
 {% endblock content %}

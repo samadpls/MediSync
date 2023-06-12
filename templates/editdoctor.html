@@ -113,55 +113,63 @@
                             <div class="card-body">
                                 <p class="text-uppercase text-sm">Doctor
                                     Information</p>
+                                    <form method="POST" action="{% url 'update_doctor' id %}">
+                                        {% csrf_token %}
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Full
                                                 Name</label>
-                                            <input class="form-control" type="text" value="Abdul Samad Siddiqui"
-                                                id="name">
+                                            <input class="form-control" type="text" value="{{doctor1.name}}"
+                                                id="name" name="name">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Email
                                                 address</label>
-                                            <input class="form-control" type="email" value="jesse@example.com"
-                                                id="email">
+                                            <input class="form-control" type="email" value="{{doctor1.email}}"
+                                                id="email" name="email">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Specialty</label>
-                                            <input class="form-control" type="text" value="Dentist"
-                                            id="specialty">
+                                            <input class="form-control" type="text" value="{{doctor1.specialty}}"
+                                            id="specialty" name="specialty">
                                         </div>
                                     </div>
-                                </div>
-                                <hr class="horizontal dark">
-                                <p class="text-uppercase text-sm">Availability
-                                    Information</p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="availability_day" clas="form-control-label">Day of Week</label>
-                                            <input class="form-control" type="text" id="avl_day" name="availability_day" required value="Mon-Tue">
+                                    <hr class="horizontal dark">
+                                    <p class="text-uppercase text-sm">Availability
+                                        Information</p>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="availability_day" clas="form-control-label">Day of Week</label>
+                                                <input class="form-control" type="text"  name="availability_day"  id="avl_day" value="{{doctor1.day_of_week}}" required>
+                                            </div>
+                                            
                                         </div>
-                                        
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="availability_day" clas="form-control-label">Time Range</label>
-                                            <input class="form-control" type="text" id="t_range" name="availability_day" required value="7pm-8pm">
-                                           </div>
-                                    </div>
-                                    <div class="col-6 text-center">
-                                        <a class="btn bg-gradient-dark mb-0" href="javascript:;"><i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Update Record</a>
-                                      </div>
-                                      <div class="col-6 text-center">
-                                        <a class="btn bg-gradient-danger mb-0" href="javascript:;"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Delete Record</a>
-                                      </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="availability_day" clas="form-control-label">Time Range</label>
+                                                <input class="form-control" type="text" id="t_range" name="availability_time"  value="{{doctor1.time_range}}" required>
+                                               </div>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <button class="btn bg-gradient-dark mb-0" type="submit"><i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Update Record</button>
+                                          </div>
+                                        </form>
+                                          <div class="col-6 text-center">
+                                            <form method="POST" action="{% url 'delete-doctor' doctor1.id_d %}">
+                                                {% csrf_token %}
+                                                <button class="btn bg-gradient-danger mb-0" type="submit">
+                                                  <i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Delete Record
+                                                </button>
+                                              </form>
+                                          </div>
                                 </div>
+                                    
+                                
                             </div>
                         </div>
                     </div>
@@ -177,19 +185,20 @@
                             </div>
                             <div class="card-body p-3 pb-0">
                                 <ul class="list-group">
+                                    {% for record in doctor %}
                                     <li
                                         class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                                         <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">Name</h6>
-                                            <span class="text-xs">specialty</span>
+                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">{{record.name}}</h6>
+                                            <span class="text-xs">{{record.specialty}}</span>
                                         </div>
                                         <div class="d-flex align-items-center text-sm">
-                                            email
-                                            <a href="{% url 'editdoctor' %}">
+                                            <a href="{% url 'editdoctor' record.id_d %}">
                                             <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"><i
                                                     class="fas fa-pencil-alt text-lg me-1"></i> Edit</button></a>
                                         </div>
                                     </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>

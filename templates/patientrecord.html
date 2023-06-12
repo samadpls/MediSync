@@ -95,12 +95,15 @@
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="form-group">
-              <select class="form-select bg-dark text-white" aria-label="Select Patient">
-                <option class="text-white" selected disabled>Select Patient...&nbsp;&nbsp;</option>
-                <option class="text-white">Id and name</option>
+              <select class="btn bg-gradient-danger mb-0" aria-label="Select Patient" id="patient-select">
+                {% for patient in patients %}
+                <option class="btn bg-gradient-danger mb-0" value="{{ patient.id_p }}" id="{{ patient.id_p }}">{{ patient.id_p }} - {{ patient.name }}</option>
+                {% endfor %}
               </select>
             </div>
-            
+              <button class="btn bg-gradient-success" id="search-button">Search</button>
+            </div>
+         
             
         </div>
         </div>
@@ -114,7 +117,7 @@
           <div class="col-8">
             <div class="card mb-4">
               <div class="card-header pb-0">
-                <h6>Avaliable Doctors</h6>
+                <h6>Avaliable Doctors {{appointments}}</h6>
               </div>
               <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
@@ -126,27 +129,8 @@
                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Booking</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div>
-                              <img src="https://xsgames.co/randomusers/avatar.php?g=male" class="avatar avatar-sm me-3" alt="user1">
-                            </div>
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">John Michael</h6>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <p class="text-xs font-weight-bold mb-0">Dentist</p>
-                        </td>
-                        <td class="align-middle text-center">
-                          <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                        </td>
-                      </tr>
-
-
+                    <tbody id="appointment-table-body">
+                      <!-- Table rows will be dynamically added here -->
                     </tbody>
                   </table>
                 </div>
@@ -168,16 +152,16 @@
               <div class="card-body pt-0">
                 <div class="text-center mt-4">
                   <h5>
-                    Mark Davis<span class="font-weight-light">, 35</span>
+                    <span id="patient-name"></span>
                   </h5>
                   <div class="h6 font-weight-300">
-                    <i class="ni location_pin mr-2"></i>Email address
+                    <i class="ni location_pin mr-2"></i><span id="patient-email"></span>
                   </div>
                   <div class="h6 mt-4">
-                    <i class="ni business_briefcase-24 mr-2"></i>Address
+                    <i class="ni business_briefcase-24 mr-2"></i><span id="patient-address"></span>
                   </div>
                   <div>
-                    <i class="ni education_hat mr-2"></i>phonenumber
+                    <i class="ni education_hat mr-2"></i><span id="patient-phone"></span>
                   </div>
                 </div>
               </div>
@@ -352,6 +336,75 @@
   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
   crossorigin="anonymous"></script>
 </body>
+<script>
+  // Get the patient select element
+  const patientSelect = document.querySelector('#patient-select');
+  const searchButton = document.querySelector('#search-button');
+  const patientNameElement = document.querySelector('#patient-name');
+  const patientEmailElement = document.querySelector('#patient-email');
+  const patientAddressElement = document.querySelector('#patient-address');
+  const patientPhoneElement = document.querySelector('#patient-phone');
+
+  function retrieveDoctorRecords(patientId) {
+  const url = `/getrecord/${patientId}/`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      // Update the HTML table with the retrieved patient record
+      const tableBody = document.querySelector('#appointment-table-body');
+      tableBody.innerHTML = ''; // Clear the table body
+
+      // Iterate over the appointments data and create table rows
+      data.appointments.forEach(appointment => {
+        const row = document.createElement('tr');
+        const doctorName = document.createElement('td');
+        doctorName.innerHTML = `<h6 class="mb-0 text-sm">${appointment.doctor_name}</h6>`;
+        const specialty = document.createElement('td');
+        specialty.innerHTML = `<p class="text-xs font-weight-bold mb-0">${appointment.specialty}</p>`;
+        const appointmentDate = document.createElement('td');
+        appointmentDate.innerHTML = `<span class="text-secondary text-xs font-weight-bold">${appointment.booking}</span>`;
+
+        row.appendChild(doctorName);
+        row.appendChild(specialty);
+        row.appendChild(appointmentDate);
+        tableBody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+// Add event listener for the button click event
+searchButton.addEventListener('click', function() {
+  // Get the selected patient ID
+  const selectedPatientId = patientSelect.value;
+
+  // Call the function to retrieve the patient record
+  retrievePatientRecord(selectedPatientId);
+});
+
+// Function to retrieve the patient record
+function retrievePatientRecord(patientId) {
+  const url = `/getpatient/${patientId}/`;
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      // Update the HTML elements with the retrieved patient data
+      patientNameElement.innerText = data.name;
+      patientEmailElement.innerText = data.email;
+      patientAddressElement.innerText = data.address;
+      patientPhoneElement.innerText = data.phone_number;
+      retrieveDoctorRecords(patientId);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+</script>
+
 
 </html>
 {% endblock content %}
