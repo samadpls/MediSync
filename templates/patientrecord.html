@@ -344,6 +344,16 @@
   const patientEmailElement = document.querySelector('#patient-email');
   const patientAddressElement = document.querySelector('#patient-address');
   const patientPhoneElement = document.querySelector('#patient-phone');
+  const random_pic = [
+  '../static/assets/img/team-2.jpg',
+  '../static/assets/img/team-1.jpg',
+  '../static/assets/img/team-3.jpg',
+  '../static/assets/img/team-4.jpg',
+  'https://xsgames.co/randomusers/avatar.php?g=male',
+  'https://xsgames.co/randomusers/avatar.php?g=female',
+  'https://xsgames.co/randomusers/avatar.php?g=pixel'
+];
+    
 
   function retrieveDoctorRecords(patientId) {
   const url = `/getrecord/${patientId}/`;
@@ -355,11 +365,19 @@
       const tableBody = document.querySelector('#appointment-table-body');
       tableBody.innerHTML = ''; // Clear the table body
 
-      // Iterate over the appointments data and create table rows
       data.appointments.forEach(appointment => {
         const row = document.createElement('tr');
+        const doctorImage = document.createElement('img');
+        const randomIndex = Math.floor(Math.random() * random_pic.length);
+        doctorImage.src = random_pic[randomIndex];
+        doctorImage.alt = 'Doctor Image';
+        doctorImage.classList.add('doctor-image');
         const doctorName = document.createElement('td');
-        doctorName.innerHTML = `<h6 class="mb-0 text-sm">${appointment.doctor_name}</h6>`;
+        doctorName.innerHTML = `
+        <div class='d-flex px-2 py-1'>
+        <img class='avatar avatar-sm me-3' src="${doctorImage.src}" alt="${doctorImage.alt}" class="${doctorImage.classList}">
+        <h6 class="mb-0 text-sm">${appointment.doctor_name}</h6>
+        </div>`
         const specialty = document.createElement('td');
         specialty.innerHTML = `<p class="text-xs font-weight-bold mb-0">${appointment.specialty}</p>`;
         const appointmentDate = document.createElement('td');
