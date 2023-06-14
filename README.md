@@ -1,3 +1,4 @@
+
 <img src='https://img.freepik.com/free-psd/3d-illustration-doctor-placing-vaccine-injection_1419-2774.jpg'>
 
 # MediSync 🩺
@@ -73,3 +74,5 @@ Contributions to the MediSync project are welcome! If you find any issues or hav
 The MediSync project is licensed under the [MIT License](LICENSE).
 
 Feel free to customize and modify the project according to your needs. This is just a template for your README file, and you can add or modify sections as required.
+
+https://github.com/samadpls/MediSync/assets/94792103/f19170de-0f3c-4eca-94a5-0566372a5e78
