@@ -20,18 +20,13 @@ To run the MediSync project locally, follow these steps:
    pip install -r requirements.txt
    ```
 
-3. Perform database migrations using the following command:
-   ```ruby
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
 
-4. Run the Django development server.
+3. Run the Django development server.
    ```ruby
    python manage.py runserver
    ```
 
-5. Access the project in your web browser using the provided URL.
+4. Access the project in your web browser using the provided URL.
 
 ## Components
 
@@ -41,7 +36,6 @@ The MediSync project is divided into three main components:
 
 2. **App Website:** The Django app responsible for handling the website functionality, including patient and doctor management, appointment creation, and patient record management.
 
-3. **Database App:** A Django app responsible for connecting to the database and handling data storage and retrieval using SQLite3.
 
 ## Features
 
