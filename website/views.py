@@ -1,12 +1,8 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
-from database.models import *
-from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 import json
-import sqlite3,os,datetime
-from django.core.files.storage import FileSystemStorage
+import sqlite3,os,datetime,random,string
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -235,7 +231,6 @@ def patientrecord(request):
                 patients.append(patient)
     # If the request is not a POST request or the selected patient is not found, render the initial page
     return render(request, 'patientrecord.html', {'patients':patients})
-from django.http import JsonResponse
 
 @csrf_exempt
 def getrecord(request, patientId):
