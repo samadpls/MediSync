@@ -121,7 +121,7 @@
                                             <label for="example-text-input" class="form-control-label">Full
                                                 Name</label>
                                             <input class="form-control" type="text" value={{patient1.name}}
-                                                id="name" name="name">
+                                                id="name" name="name" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -129,7 +129,7 @@
                                             <label for="example-text-input" class="form-control-label">Email
                                                 address</label>
                                             <input class="form-control" type="email" value="{{patient1.email}}"
-                                                id="email" name="email">
+                                                id="email" name="email" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -145,7 +145,7 @@
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Date
                                                 of Birth</label>
-                                            <input class="form-control" type="date" id="dob" value="{{patient1.dob|date:'Y-m-d'}}" name="dob">
+                                            <input class="form-control" type="date" id="dob" value="{{patient1.dob|date:'Y-m-d'}}" name="dob" required>
                                         </div>
                                     </div>
                                 </div>
@@ -157,14 +157,14 @@
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Address</label>
                                             <input class="form-control" type="text"
-                                                value="{{patient1.address}}" name="address">
+                                                value="{{patient1.address}}" name="address" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Phone
                                                 number</label>
-                                            <input class="form-control" type="text" value="{{patient1.phone_number}}" name="phone_number">
+                                            <input class="form-control" type="text" value="{{patient1.phone_number}}" name="phone_number" required>
                                         </div>
                                     </div>
                                 </div>
