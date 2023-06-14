@@ -120,8 +120,21 @@ def delete_patient(request, id_p):
     return redirect('/patient')
 
 def doctor(request):
-    doctor=Doctor.objects.all()
-    return render(request,'doctor.html',{'doctor':doctor})
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            query = "SELECT * FROM Doctor"  
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+            column_names = [description[0] for description in cursor.description]
+
+            # Prepare the data as a list of dictionaries
+            doctors = []
+            for row in rows:
+                doctor = dict(zip(column_names, row))
+                doctors.append(doctor)
+            print(doctors)
+            return render(request,'doctor.html',{'doctor':doctors})
     
 def delete_doctor(request,id_d):
     doctor = Doctor.objects.get(id_d=id_d)
@@ -130,20 +143,52 @@ def delete_doctor(request,id_d):
 
 
 def editdoctor(request,id_d):
-    doctor1 = Doctor.objects.filter(id_d=id_d).first()
-    doctor=Doctor.objects.all()
-    return render(request,'editdoctor.html',{"doctor": doctor, "id": id_d,"doctor1":doctor1})
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor() 
+            query_specific_doctor = """
+                SELECT * FROM Doctor
+                WHERE id_d= ?
+            """
+            cursor.execute(query_specific_doctor, (id_d,))
+            row_specific_doctor = cursor.fetchone()
+            # Get all doctors
+            query_all_doctors = """
+                SELECT * FROM Doctor
+            """
+            cursor.execute(query_all_doctors)
+            rows_all_doctors = cursor.fetchall()
+
+
+    # Process the retrieved data as needed
+    doctor1 = dict(zip(['id_d', 'name',  'email', 'specialty', 'day_of_week','time_range'], row_specific_doctor)) if row_specific_doctor else None
+    print(doctor1)
+    doctors = [dict(zip([description[0] for description in cursor.description], row)) for row in rows_all_doctors]
+
+    return render(request,'editdoctor.html',{"doctor": doctors, "id": id_d,"doctor1":doctor1})
 
 def update_doctor(request, id_d):
-    doctor = Doctor.objects.get(id_d=id_d)
+    
     if request.method == 'POST':
-        doctor.name = request.POST.get('name')
-        doctor.email = request.POST.get('email')
-        doctor.specialty = request.POST.get('specialty')
-        doctor.day_of_week = request.POST.get('availability_day')
-        doctor.time_range = request.POST.get('availability_time')
-        doctor.save()
-        return redirect('/doctor')
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        specialty = request.POST.get('specialty')
+        day_of_week = request.POST.get('availability_day')
+        time_range = request.POST.get('availability_time')
+        with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            # Update the Doctor information in the database
+            query = """
+                UPDATE Doctor
+                SET name = ?,
+                    email = ?,
+                    specialty = ?,
+                    day_of_week = ?,
+                    time_range = ?
+                WHERE id_d = ? 
+            """
+            values = (name, email, specialty, day_of_week, time_range,  id_d)
+            cursor.execute(query, values)
+            return redirect('/doctor')
     return redirect('/doctor')
 
     
