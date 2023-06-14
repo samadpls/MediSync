@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 import json
-import uuid
-import datetime
+import sqlite3,os
 from django.core.files.storage import FileSystemStorage
 
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
 # Create your views here.
 def home(request):
     return render(request, 'index.html', {})
@@ -22,8 +23,20 @@ def dashboard(request):
     return render(request,'dashboard.html',{'doctor':doctor,"random_pic":random_pic,'patients':patients})
 
 def patient(request):
-    patient=Patient.objects.all()
-    return render(request,'patient.html',{'patient':patient})
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            query = "SELECT * FROM Patient"  
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+            column_names = [description[0] for description in cursor.description]
+
+            # Prepare the data as a list of dictionaries
+            patients = []
+            for row in rows:
+                patient = dict(zip(column_names, row))
+                patients.append(patient)
+            return render(request,'patient.html',{'patient':patients})
 
 @csrf_exempt
 def get_appointment(request):
@@ -50,28 +63,60 @@ def get_appointment(request):
 
 
 def editpatient(request,id_p):
-    patient1 = Patient.objects.filter(id_p=id_p).first()
-    patient=Patient.objects.all()
-    
-    return render(request,'editpatient.html',{"patient": patient, "id": id_p,"patient1":patient1})
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor() 
+            query_specific_patient = """
+                SELECT * FROM Patient
+                WHERE id_p = ?
+            """
+            cursor.execute(query_specific_patient, (id_p,))
+            row_specific_patient = cursor.fetchone()
+            # Get all patients
+            query_all_patients = """
+                SELECT * FROM Patient
+            """
+            cursor.execute(query_all_patients)
+            rows_all_patients = cursor.fetchall()
+
+
+    # Process the retrieved data as needed
+    patient1 = dict(zip(['id_p', 'name', 'address', 'phone_number', 'email', 'dob', 'gender'], row_specific_patient)) if row_specific_patient else None
+    print(patient1)
+    patients = [dict(zip([description[0] for description in cursor.description], row)) for row in rows_all_patients]
+
+    return render(request,'editpatient.html',{"patient": patients, "id": id_p,"patient1":patient1})
 
 def update_patient(request,id_p):
-    patient = Patient.objects.get(id_p=id_p)
-
     if request.method == 'POST':
-        # Update the patient information based on the submitted form data
-        patient.name = request.POST.get('name')
-        patient.email = request.POST.get('email')
-        patient.gender = request.POST.get('gender')
-        patient.dob = request.POST.get('dob')
-        patient.address = request.POST.get('address')
-        patient.phone_number = request.POST.get('phone_number')
-        patient.save()
+       # Get the submitted form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+        address = request.POST.get('address')
+        phone_number = request.POST.get('phone_number')
+        with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            # Update the patient information in the database
+            query = """
+                UPDATE Patient
+                SET name = ?,
+                    email = ?,
+                    gender = ?,
+                    dob = ?,
+                    address = ?,
+                    phone_number = ?
+                WHERE id_p = ? 
+            """
+            values = (name, email, gender, dob, address, phone_number, id_p)
+            cursor.execute(query, values)
         
-    return redirect('/patient')
-def delete_patient(request,id_p):
-    patient = Patient.objects.get(id_p=id_p)
-    patient.delete()
+        return redirect('/patient')
+def delete_patient(request, id_p):
+    with sqlite3.connect(BASE_DIR / 'data.db') as db:
+        cursor = db.cursor()
+        query = "DELETE FROM Patient WHERE id_p = ?"
+        cursor.execute(query, (id_p,))
     return redirect('/patient')
 
 def doctor(request):
@@ -149,9 +194,13 @@ def save_patient(request):
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         
-        # Create a new patient record
-        patient = Patient(id_p="".join(random.choices(string.ascii_letters + string.digits, k=4)),name=name, email=email, gender=gender, dob=dob, address=address, phone_number=phone)
-        patient.save()   
+         #connectig with sqlite3
+        with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            query = "INSERT INTO Patient (id_p, name, email, gender, dob, address, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?)"
+            values = ("".join(random.choices(string.ascii_letters + string.digits, k=4)),
+                       name, email, gender, dob, address, phone)
+            cursor.execute(query, values)
     return redirect('/patient')
 
 def save_doctor(request):
