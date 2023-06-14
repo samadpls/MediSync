@@ -135,8 +135,12 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Specialty</label>
-                                            <input class="form-control" type="text" value="{{doctor1.specialty}}"
-                                            id="specialty" name="specialty" required>
+                                            <select class="form-control" id="specialty" name="specialty" required>
+                                                <option {% if doctor1.specialty == 'Dentist' %}selected{% endif %}>Dentist</option>
+                                                <option {% if doctor1.specialty == 'Dermatology' %}selected{% endif %}>Dermatology</option>
+                                                <option {% if doctor1.specialty == 'Orthopedics' %}selected{% endif %}>Orthopedics</option>
+                                                <option {% if doctor1.specialty == 'Pediatrics' %}selected{% endif %}>Pediatrics</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <hr class="horizontal dark">

@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 import json
-import sqlite3,os
+import sqlite3,os,datetime
 from django.core.files.storage import FileSystemStorage
 
 from pathlib import Path
@@ -18,9 +18,32 @@ def dashboard(request):
     random_pic=['../static/assets/img/team-2.jpg','../static/assets/img/team-1.jpg','../static/assets/img/team-3.jpg',
                 '../static/assets/img/team-4.jpg','https://xsgames.co/randomusers/avatar.php?g=male',
                 'https://xsgames.co/randomusers/avatar.php?g=female','https://xsgames.co/randomusers/avatar.php?g=pixel']
-    doctor=Doctor.objects.all()
-    patients = Patient.objects.values('id_p', 'name')
-    return render(request,'dashboard.html',{'doctor':doctor,"random_pic":random_pic,'patients':patients})
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            query = "SELECT * FROM Doctor"  
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+            column_names = [description[0] for description in cursor.description]
+
+            # Prepare the data as a list of dictionaries
+            doctors = []
+            for row in rows:
+                doctor = dict(zip(column_names, row))
+                doctors.append(doctor)
+
+            query = "SELECT id_p,name FROM Patient"  
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+            column_names = [description[0] for description in cursor.description]
+
+            # Prepare the data as a list of dictionaries
+            patients = []
+            for row in rows:
+                patient = dict(zip(column_names, row))
+                patients.append(patient)    
+    return render(request,'dashboard.html',{'doctor':doctors,"random_pic":random_pic,'patients':patients})
 
 def patient(request):
     with sqlite3.connect(BASE_DIR/'data.db') as db:
@@ -48,16 +71,18 @@ def get_appointment(request):
 
         
         # Retrieve the patient and doctor objects using their IDs
-        patient = Patient.objects.get(id_p=patient_id)
-        doctor = Doctor.objects.get(id_d=doctor_id)
+        with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor() 
+            cursor.execute("SELECT * FROM Patient WHERE id_p=?", (patient_id,))
+            patient_result = cursor.fetchone()
+            cursor.execute("SELECT * FROM Doctor WHERE id_d=?", (doctor_id,))
+            doctor_result = cursor.fetchone()
+            appointment_id = "".join(random.choices(string.ascii_letters + string.digits, k=4))
 
-        # Create a new Appointment object and save it to the database
-        appointment = Appointment.objects.create(
-            id_a="".join(random.choices(string.ascii_letters + string.digits, k=4)),
-            patient=patient,
-            doctor=doctor
-        )
-        
+            # Create a new Appointment object and save it to the database
+            cursor.execute("INSERT INTO Appointment (id_a, patient, doctor,date) VALUES (?, ?, ?,?)", (appointment_id, patient_result[0], doctor_result[0],datetime.date.today()))
+
+
         return redirect('/dashboard')
     
 
@@ -137,8 +162,10 @@ def doctor(request):
             return render(request,'doctor.html',{'doctor':doctors})
     
 def delete_doctor(request,id_d):
-    doctor = Doctor.objects.get(id_d=id_d)
-    doctor.delete()
+    with sqlite3.connect(BASE_DIR / 'data.db') as db:
+        cursor = db.cursor()
+        query = "DELETE FROM Doctor WHERE id_d = ?"
+        cursor.execute(query, (id_d,))
     return redirect('/doctor')
 
 
@@ -193,37 +220,58 @@ def update_doctor(request, id_d):
 
     
 def patientrecord(request):
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            query = "SELECT * FROM Patient"  
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+            column_names = [description[0] for description in cursor.description]
+
+            # Prepare the data as a list of dictionaries
+            patients = []
+            for row in rows:
+                patient = dict(zip(column_names, row))
+                patients.append(patient)
     # If the request is not a POST request or the selected patient is not found, render the initial page
-    return render(request, 'patientrecord.html', {'patients': Patient.objects.all()})
+    return render(request, 'patientrecord.html', {'patients':patients})
 from django.http import JsonResponse
 
 @csrf_exempt
 def getrecord(request, patientId):
-    appointments = Appointment.objects.filter(patient_id=patientId)
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor() 
+            cursor.execute("SELECT Doctor.name, Doctor.specialty, Appointment.date FROM Appointment INNER JOIN Doctor ON Appointment.doctor = Doctor.id_d WHERE Appointment.patient=?", (patientId,))
+            appointment_results = cursor.fetchall()
 
-    appointment_data = [
-        {
-            'doctor_name': appointment.doctor.name,
-            'specialty': appointment.doctor.specialty,
-            'booking': appointment.date,
-        }
-        for appointment in appointments
-    ]
+
+            # Process the retrieved appointment data
+            appointment_data = [
+                {
+                    'doctor_name': appointment_result[0],
+                    'specialty': appointment_result[1],
+                    'booking': appointment_result[2],
+                }
+                for appointment_result in appointment_results
+            ]
 
     return JsonResponse({'appointments': appointment_data})
 
 
 @csrf_exempt
 def getpatient(request,patientId):
-    patient = Patient.objects.get(id_p=patientId)
-     # Create a dictionary with the patient record data
-    print(patientId)
-    patient_data = {
-        'name': patient.name,
-        'email': patient.email,
-        'address': patient.address,
-        'phone_number': patient.phone_number
-    }
+    with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor() 
+            cursor.execute("SELECT name, email, address, phone_number FROM Patient WHERE id_p=?", (patientId,))
+            patient_result = cursor.fetchone()
+
+            # Create a dictionary with the patient record data
+            patient_data = {
+                'name': patient_result[0],
+                'email': patient_result[1],
+                'address': patient_result[2],
+                'phone_number': patient_result[3]
+            }
     
     print('here'*10)
       
@@ -250,12 +298,16 @@ def save_patient(request):
 
 def save_doctor(request):
     if request.method == 'POST':
-        full_name = request.POST.get('full_name')
+        name = request.POST.get('full_name')
         email = request.POST.get('email')
         specialty = request.POST.get('specialty')
         day_of_week = request.POST.get('availability_day')
         time_range = request.POST.get('availability_time')
-        doctor = Doctor.objects.create(id_d="".join(random.choices(string.ascii_letters + string.digits, k=4)),
-            name=full_name, email=email, specialty=specialty,day_of_week=day_of_week, time_range=time_range)
-        doctor.save()
+        with sqlite3.connect(BASE_DIR/'data.db') as db:
+            cursor=db.cursor()
+            query = "INSERT INTO Doctor (id_d, name, email, specialty, day_of_week, time_range) VALUES (?, ?, ?, ?, ?,?)"
+            values = ("".join(random.choices(string.ascii_letters + string.digits, k=4)),
+                       name, email, specialty, day_of_week, time_range)
+            cursor.execute(query, values)
+        
     return redirect('/doctor')
