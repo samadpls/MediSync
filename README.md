@@ -75,4 +75,8 @@ The MediSync project is licensed under the [MIT License](LICENSE).
 
 Feel free to customize and modify the project according to your needs. This is just a template for your README file, and you can add or modify sections as required.
 
-https://github.com/samadpls/MediSync/assets/94792103/f19170de-0f3c-4eca-94a5-0566372a5e78
+
+
+https://github.com/samadpls/MediSync/assets/94792103/5ca6b666-c223-4cfc-8675-1383c069427f
+
+
