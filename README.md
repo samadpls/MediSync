@@ -2,36 +2,52 @@
 <img src='https://img.freepik.com/free-psd/3d-illustration-doctor-placing-vaccine-injection_1419-2774.jpg'>
 
 # MediSync 🩺
- 
 
-MediSync is a hospital management project created for Hackathon. It provides a platform for managing patient, doctor, and appointment records, built using Django, HTML, CSS, and JavaScript. The project includes features like patient record management, appointment creation, and a visually appealing user interface with dark mode and customizable button colors. 🏥📝⏰
+MediSync is a hospital management project created for a Hackathon. It provides a platform for managing patient, doctor, and appointment records, built using Django, HTML, CSS, and JavaScript. The project includes features like patient record management, appointment creation, and a visually appealing user interface with dark mode and customizable button colors. 🏥📝⏰
 
 ## Installation and Usage
 
-To run the MediSync project locally, follow these steps:
+To run the MediSync project locally or using Docker, follow these steps:
 
-1. Clone the project repository to your local machine using the following command:
-   ```ruby
+1. **Clone the project repository** to your local machine using the following command:
+   ```bash
    git clone https://github.com/samadpls/MediSync.git
    ```
 
-2. Install the necessary dependencies listed in the project's requirements file.
-   ```ruby
+2. **Navigate to the project directory**:
+   ```bash
+   cd MediSync
+   ```
+
+3. **Install the necessary dependencies** listed in the project's requirements file.
+   ```bash
    pip install -r requirements.txt
    ```
 
-3. Perform database migrations using the following command:
-   ```ruby
+4. **Perform database migrations** using the following command:
+   ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
 
-4. Run the Django development server.
-   ```ruby
+5. **Run the Django development server**:
+   ```bash
    python manage.py runserver
    ```
+---
+   **OR**, if you want to use Docker:
 
-5. Access the project in your web browser using the provided URL.
+5. **Build the Docker image** (make sure you have Docker installed):
+   ```bash
+   docker build -t medisync .
+   ```
+
+6. **Run a Docker container** based on the built image:
+   ```bash
+   docker run -p 8000:8000 medisync
+   ```
+
+6. Access the project in your web browser using the provided URL.
 
 ## Components
 
