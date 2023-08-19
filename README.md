@@ -37,14 +37,9 @@ To run the MediSync project locally or using Docker, follow these steps:
 ---
    **OR**, if you want to use Docker:
 
-5. **Build the Docker image** (make sure you have Docker installed):
+5. **Run the project using Docker Compose:** (make sure you have Docker installed):
    ```bash
-   docker build -t medisync .
-   ```
-
-6. **Run a Docker container** based on the built image:
-   ```bash
-   docker run -p 8000:8000 medisync
+   docker-compose up
    ```
 
 6. Access the project in your web browser using the provided URL.
