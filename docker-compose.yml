@@ -5,5 +5,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: medisync
+    restart: always   
     ports:
       - "8000:8000"
+    volumes:
+      - static_volume:/static
+      - website_volume:/website
+      - database_volume:/database
+      - templates_volume:/templates
+    environment:
+      - DJANGO_SETTINGS_MODULE=MediSync.settings
+volumes:
+  static_volume:
+  website_volume:
+  database_volume:
+  templates_volume:       
