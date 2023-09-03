@@ -140,20 +140,115 @@
                                         </div>
                                     </div>
                                     <hr class="horizontal dark">
-                                    <p class="text-uppercase text-sm">Availability
-                                        Information</p>
+                                    <p class="text-uppercase text-sm">Availability Information</p>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="availability_day" clas="form-control-label">Day of Week</label>
-                                                <input class="form-control" type="text"  name="availability_day"  id="avl_day" value="{{doctor1.day_of_week}}" required>
+                                                <label for="availability_day" class="form-control-label">Availability Day</label>
+                                                <input class="form-control" type="text" name="availability_day" id="avl_day" value="{{ doctor1.day_of_week }}" readonly>
                                             </div>
-                                            
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="availability_day" clas="form-control-label">Time Range</label>
-                                                <input class="form-control" type="text" id="t_range" name="availability_time"  value="{{doctor1.time_range}}" required>
-                                               </div>
+                                                <label for="availability_time" class="form-control-label">Availability Time</label>
+                                                <input class="form-control" type="text" id="t_range" name="availability_time" value="{{ doctor1.time_range }}" readonly>
+                                            </div>
+                                        </div>
+                                        <p class="text-uppercase text-sm">Modify Availability Information</p>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="start_day" class="form-control-label">Start Day</label>
+                                                <select class="form-control" id="start_day" name="start_day" required>
+                                                    <option value="" disabled selected>Select start day</option>
+                                                    <option value="Mon">Monday</option>
+                                                    <option value="Tue">Tuesday</option>
+                                                    <option value="Wed">Wednesday</option>
+                                                    <option value="Thu">Thursday</option>
+                                                    <option value="Fri">Friday</option>
+                                                    <option value="Sat">Saturday</option>
+                                                    <option value="Sun">Sunday</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="end_day" class="form-control-label">End Day</label>
+                                                <select class="form-control" id="end_day" name="end_day" required>
+                                                    <option value="Mon">Monday</option>
+                                                    <option value="Tue">Tuesday</option>
+                                                    <option value="Wed">Wednesday</option>
+                                                    <option value="Thu">Thursday</option>
+                                                    <option value="Fri">Friday</option>
+                                                    <option value="Sat">Saturday</option>
+                                                    <option value="Sun">Sunday</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="start_time" class="form-control-label">Start Time</label>
+                                                <select class="form-control" id="start_time" name="start_time" required>
+                                                    <option value="" disabled selected>Select start time</option>
+                                                    <option value="00:00">00:00</option>
+                                                    <option value="01:00">01:00</option>
+                                                    <option value="02:00">02:00</option>
+                                                    <option value="03:00">03:00</option>
+                                                    <option value="04:00">04:00</option>
+                                                    <option value="05:00">05:00</option>
+                                                    <option value="06:00">06:00</option>
+                                                    <option value="07:00">07:00</option>
+                                                    <option value="08:00">08:00</option>
+                                                    <option value="09:00">09:00</option>
+                                                    <option value="10:00">10:00</option>
+                                                    <option value="11:00">11:00</option>
+                                                    <option value="12:00">12:00</option>
+                                                    <option value="13:00">13:00</option>
+                                                    <option value="14:00">14:00</option>
+                                                    <option value="15:00">15:00</option>
+                                                    <option value="16:00">16:00</option>
+                                                    <option value="17:00">17:00</option>
+                                                    <option value="18:00">18:00</option>
+                                                    <option value="19:00">19:00</option>
+                                                    <option value="20:00">20:00</option>
+                                                    <option value="21:00">21:00</option>
+                                                    <option value="22:00">22:00</option>
+                                                    <option value="23:00">23:00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="end_time" class="form-control-label">End Time</label>
+                                                <select class="form-control" id="end_time" name="end_time" required>
+                                                    <option value="" disabled selected>Select end time</option>
+                                                    <option value="00:00">00:00</option>
+                                                    <option value="01:00">01:00</option>
+                                                    <option value="02:00">02:00</option>
+                                                    <option value="03:00">03:00</option>
+                                                    <option value="04:00">04:00</option>
+                                                    <option value="05:00">05:00</option>
+                                                    <option value="06:00">06:00</option>
+                                                    <option value="07:00">07:00</option>
+                                                    <option value="08:00">08:00</option>
+                                                    <option value="09:00">09:00</option>
+                                                    <option value="10:00">10:00</option>
+                                                    <option value="11:00">11:00</option>
+                                                    <option value="12:00">12:00</option>
+                                                    <option value="13:00">13:00</option>
+                                                    <option value="14:00">14:00</option>
+                                                    <option value="15:00">15:00</option>
+                                                    <option value="16:00">16:00</option>
+                                                    <option value="17:00">17:00</option>
+                                                    <option value="18:00">18:00</option>
+                                                    <option value="19:00">19:00</option>
+                                                    <option value="20:00">20:00</option>
+                                                    <option value="21:00">21:00</option>
+                                                    <option value="22:00">22:00</option>
+                                                    <option value="23:00">23:00</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="col-6 text-center">
                                             <button class="btn bg-gradient-dark mb-0" type="submit"><i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Update Record</button>
