@@ -15,7 +15,7 @@ services:
       - templates_volume:/templates
     environment:
       - DJANGO_SETTINGS_MODULE=MediSync.settings
-volumes:
+volumes: 
   static_volume:
   website_volume:
   database_volume:
