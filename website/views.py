@@ -91,15 +91,29 @@ def editdoctor(request,id_d):
 
 def update_doctor(request, id_d):
     doctor = Doctor.objects.get(id_d=id_d)
+    print(doctor.day_of_week)
+    print(doctor.time_range)
     if request.method == 'POST':
-        doctor.name = request.POST.get('name')
-        doctor.email = request.POST.get('email')
-        doctor.specialty = request.POST.get('specialty')
-        doctor.day_of_week = request.POST.get('availability_day')
-        doctor.time_range = request.POST.get('availability_time')
+        full_name = request.POST.get('name')
+        email = request.POST.get('email')
+        specialty = request.POST.get('specialty')
+        start_time = request.POST.get('start_time')  
+        end_time = request.POST.get('end_time')  
+        start_day = request.POST.get('start_day') 
+        end_day = request.POST.get('end_day') 
+        day_of_week = f"{start_day}-{end_day}"
+        time_range = f"{start_time}-{end_time}"
+
+        doctor.name = full_name
+        doctor.email = email
+        doctor.specialty = specialty
+        doctor.day_of_week = day_of_week
+        doctor.time_range = time_range
+        
         doctor.save()
         return redirect('/doctor')
     return redirect('/doctor')
+
 
     
 def patientrecord(request):
@@ -159,9 +173,21 @@ def save_doctor(request):
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
         specialty = request.POST.get('specialty')
-        day_of_week = request.POST.get('availability_day')
-        time_range = request.POST.get('availability_time')
-        doctor = Doctor.objects.create(id_d="".join(random.choices(string.ascii_letters + string.digits, k=4)),
-            name=full_name, email=email, specialty=specialty,day_of_week=day_of_week, time_range=time_range)
+        start_time = request.POST.get('start_time')  
+        end_time = request.POST.get('end_time')  
+        start_day = request.POST.get('start_day') 
+        end_day = request.POST.get('end_day') 
+        day_of_week = f"{start_day}-{end_day}"
+        time_range = f"{start_time}-{end_time}"
+        doctor = Doctor.objects.create(
+            id_d="".join(random.choices(string.ascii_letters + string.digits, k=4)),
+            name=full_name,
+            email=email,
+            specialty=specialty,
+            day_of_week=day_of_week, 
+            time_range=time_range,  
+        )
         doctor.save()
+
     return redirect('/doctor')
+
