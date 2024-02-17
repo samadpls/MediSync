@@ -3,7 +3,7 @@
 
 # MediSync 🩺
 
-MediSync is a hospital management project created for a Hackathon. It provides a platform for managing patient, doctor, and appointment records, built using Django, HTML, CSS, and JavaScript. The project includes features like patient record management, appointment creation, and a visually appealing user interface with dark mode and customizable button colors. 🏥📝⏰
+MediSync is a project designed to manage hospitals. It offers a comprehensive platform for managing patient, doctor, and appointment records. The project is built using Django, HTML, CSS, and JavaScript. MediSync includes features such as patient record management, appointment creation, and a visually appealing user interface with a dark mode and customizable button colors.. 🏥📝⏰
 
 ## Installation and Usage
 
